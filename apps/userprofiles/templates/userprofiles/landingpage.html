@@ -1,0 +1,30 @@
+{% extends "userprofiles/wrap.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block main %}
+<div class='row'>
+  <div class='col-md-8'>
+    <h1>Dashboard</h1>
+  </div>
+  <div class='col-md-1'>
+    <a class='btn btn-primary' href="{% url 'userprofiles:success' %}">Dashboard</a>
+  </div>
+  <div class='col-md-1'>
+    <a class='btn btn-primary' href="{% url 'userprofiles:logout' %}">Profile</a>
+  </div>
+  <div class='col-md-1'>
+    <a class='btn btn-primary' href="{% url 'userprofiles:logout' %}">Logout</a>
+  </div>
+</div>
+<div>
+  <p>Welcome, {{ user.first_name}} {{user.last_name}}</p>
+  <hr />
+  <ul>
+    <li>: <a href="{% url 'securities:index' %}">Securities</a></li>
+    <li>: <a href="{% url 'securities:companies' %}">Companies</a></li>
+    <li>: <a href="{% url 'securities:datatags' %}">Data Tags</a></li>
+    <li>: <a href="{% url 'watchlists:index' %}">Watchlists</a></li>
+  </ul>
+</div>
+{% endblock%}

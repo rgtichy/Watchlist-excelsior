@@ -1,0 +1,49 @@
+{% extends "securities/wrap.html" %}
+
+{% block title %}Companies{% endblock %}
+
+{% block main %}
+<hr>
+  <div id='companies'>
+    <div class='row'>
+      <div class='col-md-9'>
+        <h2>Companies ({{count}})</h2>
+      </div>
+      <div class='col-md-1'>
+        <a class='btn btn-primary' href="{% url 'securities:c_load' %}">Load</a>
+      </div>
+      <div class='col-md-1'>
+        <a class='btn btn-primary' href="{% url 'securities:index' %}">Securities</a>
+      </div>
+    </div>
+    <table class="table table-hover">
+      <tr>
+          <th class='col-md-2'>Actions</th>
+          <!-- <th class='col-md-1'>Edit</th> -->
+          <th class='col-md-1'>Symbol</th>
+          <th class='col-md-3'>Company Name</th>
+          <th></th>
+          <th></th>
+      </tr>
+      {% for each in C %}
+      <tr>
+        <td>
+          <a class='btn btn-primary btn-xs'>Show</a>
+          <a class='btn btn-primary btn-xs' href="{ %url 'securities:c_read' id=each.id %}">Edit</a>
+        </td>
+        <td>{{each.ticker}}</td>
+        <td>{{each.name}}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+    {% if error == True %}
+    {% for each in errors %}
+    <p class='error'>{{each}}</p>
+    {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}

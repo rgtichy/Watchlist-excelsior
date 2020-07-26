@@ -1,0 +1,18 @@
+<! DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+  <h1>Hello World</h1>
+  <p>
+    {{ new_user.first_name}}, {{new_user.last_name}}
+  </p>
+  <hr />
+  {% for each in users %}
+    <p>
+      {{each.first_name}} {{each.last_name}}, {{each.email}}
+    </p>
+  {%  endfor%}
+</body>
+</html>

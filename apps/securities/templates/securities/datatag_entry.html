@@ -1,0 +1,82 @@
+{% extends "securities/wrap.html" %}
+
+{% block title %}New Data Tag{% endblock %}
+
+{% block main %}
+<h2>
+  {% if edit %}
+    Data Tag Edit/Update/Delete
+  {% else %}
+    Data Tag Entry
+  {% endif %}
+</h2>
+<form method='POST' action=
+    {% if edit %}
+      "{% url 'securities:data_tag_edit' id=D.id %}"
+    {% else %}
+      "{% url 'securities:data_tag' %}"
+    {% endif %}
+>
+  {% csrf_token %}
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='tag'>Data Tag Name</label>
+    <input class='col-md-3 text-left' type='text' placeholder='marketcap' name='tag' {% if edit %} value="{{D.tag}}"{% endif %}/>
+  </div>
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='name'>Name</label>
+    <input class='col-md-3 text-left' type='text' placeholder='Market Capitalization' name='name' {% if edit %} value="{{D.name}}"{% endif %}/>
+  </div>
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='grouping'>Grouping Type</label>
+    <!-- <input class='col-md-3 text-left' type='text' placeholder='Income Statement' name='grouping' {% if edit %} value="{{D.grouping}}"{% endif %}/> -->
+    <select name="grouping" class='col-md-2'>
+      {% for choice, value in groupings %}
+      <option value="{{choice}}" {% if choice == D.grouping %}selected{% endif %}>{{value}}</option>
+      {% endfor %}
+    </select>
+    <label class='col-md-1 text-right' for='units'>Units</label>
+    <input class='col-md-2 text-left' type='text' placeholder='Dollars' name='units' {% if edit %} value="{{D.units}}"{% endif %}/>
+  </div>
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='historical'>Historical?</label>
+    <input class='col-md-1 text-left' type='text' placeholder='Y' name='historical' {% if edit %} value="{{D.historical}}"{% endif %}/>
+    <label class='col-md-2 text-right' for='screenable'>Screenable?</label>
+    <input class='col-md-1 text-left' type='text' placeholder='Y' name='screenable' {% if edit %} value="{{D.screenable}}"{% endif %}/>
+    <label class='col-md-1 text-right' for='templates'>Templates</label>
+    <input class='col-md-2 text-left' type='text' placeholder='Dollars' name='templates' {% if edit %} value="{{D.templates}}"{% endif %}/>
+  </div>
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='type'>Level:</label>
+    <!-- <input class='col-md-1 text-left' type='text' placeholder='C' name='level' {% if edit %} value="{{D.level}}"{% endif %}/> -->
+    <select name='level' class='col-md-2'>
+      {% for level, name in LEVEL %}
+      <option  class='col-md-2' value="{{level}}" {% if level == D.level %}selected{% endif %}>{{name}}</option>
+      {% endfor %}
+    </select>
+    <label class='col-md-1 text-right' for='api'>API:</label>
+    <input class='col-md-1 text-left' type='text' placeholder='A' name='api' {% if edit %} value="{{D.api}}"{% endif %}/>
+  </div>
+  <div>
+    <label class='col-md-2 text-right' for="description">Description</label>
+    <textarea name='description' rows="8" cols="80">{% if edit %}{{D.description}}{% endif %}</textarea>
+  </div>
+  <div class='row'>
+    <div class='col-md-8'></div>
+    <div class='col-md-1'>
+      <button class='btn btn-primary' type='submit' name='submit'>{% if edit %} Update {% else %} Add {% endif %}</button>
+    </div>
+    <div class='col-md-1'>
+      {% if edit %}
+        <a class='btn btn-danger' href="{% url 'securities:datatag_delete' id=D.id %}" type='button' name='delete'>Delete</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+<div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+  {% if error == True %}
+  {% for each in errors %}
+  <p class='error'>{{each}}</p>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

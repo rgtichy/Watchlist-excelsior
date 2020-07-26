@@ -1,0 +1,42 @@
+{% extends "watchlists/wrap.html" %}
+
+{% block title %} My Watchlists {% endblock %}
+
+{% block main %}
+<div id='watchlists'>
+  <div class='row'>
+      <div class='col-md-10'>
+        <h2 style='display:inline'>Watchlists ({{count}})</h2>
+      </div>
+      <div class='col-md-1'>
+        <a class='btn btn-primary' href="{% url 'watchlists:add' %}">Add</a>
+      </div>
+  </div>
+  <table class="table table-hover">
+    <tr>
+        <th class='col-md-2'>Actions</th>
+        <th class='col-md-2'>Watchlist</th>
+        <th class='col-md-7'>Description</th>
+        <th class='col-md-1'>Count</th>
+    </tr>
+    {% for each in W %}
+    <tr>
+      <td>
+        <a class='btn btn-primary btn-xs' href="{% url 'watchlists:view' id=each.id %}">View</a>
+        <a class='btn btn-primary btn-xs' href="{% url 'watchlists:edit' id=each.id %}">Edit</a>
+      </td>
+      <td>{{each.name}}</td>
+      <td>{{each.description}}</td>
+      <td>{{each.size}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <div id='errors' {% if error == True %} style='display: inline-block;' {% else %} style='display: none;' {% endif %}>
+    {% if error == True %}
+      {% for each in errors %}
+      <p class='error'>{{each}}</p>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

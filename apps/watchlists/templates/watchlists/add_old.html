@@ -1,0 +1,178 @@
+{% extends "watchlists/wrap.html" %}
+
+{% block main %}
+<h2 style='display:inline'>
+  Watchlist: {{W.name}}
+</h2>
+<form method='POST' action=
+    {% if edit %}
+      "{% url 'watchlists:update' id=W.id %}"
+    {% else %}
+      "{% url 'watchlists:create' %}"
+    {% endif %}
+>
+  {% csrf_token %}
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='tag'>Watchlist</label>
+    <input class='col-md-3 text-left'
+           type='text' placeholder='My Watchlist' name='name'
+           {% if edit %} value="{{W.name}}"{% endif %}
+           {% if error %} value="{{formdata.name}}"{% endif %}
+           />
+  </div>
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for="description">Description</label>
+    <input class='col-md-9 text-left' name='description'
+           {% if edit %} value="{{W.description}}"{% endif %}
+           {% if error %} value="{{formdata.description}}"{% endif %}
+           />
+  </div>
+  <div class='formgroup row'>
+    <label class='col-md-2 text-right' for='wval_1'>Value 1:</label>
+    <input class='col-md-1 text-right'
+           type='number' placeholder='100' name='wval_1' step="0.01"
+           {% if edit %} value="{{W.wval_1}}"{% endif %}
+           {% if error %} value="{{formdata.wval_1}}"{% endif %}
+           />
+    <label class='col-md-1 text-right' for='wval_2'>2:</label>
+    <input class='col-md-1 text-right'
+            type='number' placeholder='100' name='wval_2' step="0.01"
+            {% if edit %} value="{{W.wval_2}}"{% endif %}
+            {% if error %} value="{{formdata.wval_2}}"{% endif %}
+            />
+    <label class='col-md-1 text-right' for='wval_3'>3:</label>
+    <input class='col-md-1 text-right'
+            type='number' placeholder='100' name='wval_3' step="0.01"
+            {% if edit %} value="{{W.wval_3}}"{% endif %}
+            {% if error %} value="{{formdata.wval_3}}"{% endif %}
+            />
+    <label class='col-md-1 text-right' for='wval_4'>4:</label>
+    <input class='col-md-1 text-right'
+            type='number' placeholder='100' name='wval_4' step="0.01"
+            {% if edit %} value="{{W.wval_4}}"{% endif %}
+            {% if error %} value="{{formdata.wval_4}}"{% endif %}
+            />
+    <label class='col-md-1 text-right' for='wval_5'>5:</label>
+    <input class='col-md-1 text-right'
+            type='number' placeholder='100' name='wval_5' step="0.01"
+            {% if edit %} value="{{W.wval_5}}"{% endif %}
+            {% if error %} value="{{formdata.wval_5}}"{% endif %}
+            />
+  </div>
+  <div class='row'>
+    <div class='formgroup'>
+      <label class='col-md-2 text-right' for='wpct_1'>Pctg. 1:</label>
+      <input class='col-md-1 text-right'
+             type='number' placeholder='100' name='wpct_1' step="0.01"
+             {% if edit %} value="{{W.wpct_1}}"{% endif %}
+             {% if error %} value="{{formdata.wpct_1}}"{% endif %}
+             />
+    </div>
+    <div class='formgroup'>
+      <label class='col-md-1 text-right' for='wpct_2'>2:</label>
+      <input class='col-md-1 text-right'
+              type='number' placeholder='100' name='wpct_2' step="0.01"
+              {% if edit %} value="{{W.wpct_2}}"{% endif %}
+              {% if error %} value="{{formdata.wpct_2}}"{% endif %}
+              />
+    </div>
+    <div class='formgroup'>
+      <label class='col-md-1 text-right' for='wpct_3'>3:</label>
+      <input class='col-md-1 text-right'
+              type='number' placeholder='100' name='wpct_3' step="0.01"
+              {% if edit %} value="{{W.wpct_3}}"{% endif %}
+              {% if error %} value="{{formdata.wpct_3}}"{% endif %}
+              />
+    </div>
+    <div class='formgroup'>
+      <label class='col-md-1 text-right' for='wpct_4'>4:</label>
+      <input class='col-md-1 text-right'
+              type='number' placeholder='100' name='wpct_4' step="0.01"
+              {% if edit %} value="{{W.wpct_4}}"{% endif %}
+              {% if error %} value="{{formdata.wpct_4}}"{% endif %}
+              />
+    </div>
+    <div class='formgroup'>
+      <label class='col-md-1 text-right' for='wpct_5'>5:</label>
+      <input class='col-md-1 text-right'
+              type='number' placeholder='100' name='wpct_5' step="0.01"
+              {% if edit %} value="{{W.wpct_5}}"{% endif %}
+              {% if error %} value="{{formdata.wpct_5}}"{% endif %}
+              />
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-8'>
+    </div>
+    <div class='col-md-1'>
+      <button class='btn btn-primary' type='submit' name='submit'>
+        {% if edit %} Update
+        {% else %} Add
+        {% endif %}
+      </button>
+    </div>
+    <div class='col-md-1'>
+      {% if edit %}
+        <!-- <a class='btn btn-danger' href="{  % url 'watchlists:delete' id=D.id %}" type='button' name='delete'>Delete</a> -->
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+<div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+  {% if error == True %}
+    {% for each in errors %}
+    <div class='row danger'>
+      <p class='error'>{{each}}</p>
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>
+<table class='table table-bordered table-condensed'>
+  <th class='col-md-1 text-center'>
+    Order
+  </th>
+  <th class='col-md-2'>
+    Name
+  </th>
+  <th class='col-md-3' id='columns' style="display: {% if edit %}inline-block{% else %}none{% endif %};">
+    <a class='btn btn-primary' href="{% url 'watchlists:add_column' h_id=W.id %}">+</a>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+      Launch demo modal
+    </button>
+    <div class="modal fade bg-dark" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Add Column</h4>
+          </div>
+          <div class="modal-body">
+            <form method='POST' action="{% url 'watchlists:add_column' h_id=W.id %}">
+              {% csrf_token %}
+              <div class='formgroup row'>
+                <label class='col-md-2 text-right' for='element'>Element:</label>
+                <input class='col-md-2'
+                        type='text' placeholder='totalrevenue' name='element'
+                        {% if error %} value="{{modaldata.element}}"{% endif %}
+                        />
+                <label class='col-md-2 text-right' for='period'>Period:</label>
+                <select name="period" class='col-md-4'>
+                  {% for choice, value in PERIODS %}
+                  <option value="{{choice}}">{{value}}</option>
+                  {% endfor %}
+                </select>
+                <!-- {{PERIODS}} -->
+              </div>
+              <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+          </div>
+          <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </th>
+</table>
+{% endblock %}

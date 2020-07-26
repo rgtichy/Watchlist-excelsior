@@ -1,0 +1,160 @@
+{% extends "watchlists/wrap.html" %}
+
+{% block main %}
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-10'>
+      <h2 style='display:inline'>
+        Watchlist: {{W.name}}
+      </h2>
+    </div>
+    <div class='col-md-1'>
+      <a class='btn btn-primary' href="{% url 'watchlists:index' %}" type='button'>Watchlists</a>
+    </div>
+  </div>
+  <form method='POST' action=
+      {% if edit %}
+        "{% url 'watchlists:update' id=W.id %}"
+      {% else %}
+        "{% url 'watchlists:create' %}"
+      {% endif %}
+  >
+    {% csrf_token %}
+    <div class='form-group row'>
+      <label class='col-md-2 text-right' for='tag'>Watchlist</label>
+      <input class='col-md-3 text-left'
+             type='text' placeholder='My Watchlist' name='name'
+             {% if edit %} value="{{W.name}}"{% endif %}
+             {% if error %} value="{{formdata.name}}"{% endif %}
+             />
+    </div>
+    <div class='form-group row'>
+      <label class='col-md-2 text-right' for="description">Description</label>
+      <input class='col-md-9 text-left' name='description'
+             {% if edit %} value="{{W.description}}"{% endif %}
+             {% if error %} value="{{formdata.description}}"{% endif %}
+             />
+    </div>
+    <div class='form-group row'>
+      <div class='col-md-8'>
+      </div>
+      <div class='col-md-1'>
+        <button class='btn btn-primary' type='submit' name='submit'>
+          {% if edit %} Update
+          {% else %} Add
+          {% endif %}
+        </button>
+      </div>
+      {% if edit %}
+        <div  class='col-md-1'>
+          <a class='btn btn-danger' href="{% url 'watchlists:delete' id=W.id %}" type='button' name='delete'>Delete List</a>
+        </div>
+      {% endif %}
+    </div>
+  </form>
+
+  <div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+    {% if error == True %}
+      {% for each in errors %}
+      <div class='row danger'>
+        <p class='error'>{{each}}</p>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% if edit %}
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-1'>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTicker">
+        Add Ticker
+      </button>
+      <div class="modal fade bg-dark" id="addTicker" tabindex="-1" role="dialog" aria-labelledby="addTicker">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Add Ticker</h4>
+            </div>
+            <div class="modal-body">
+              <form method='POST' action="{% url 'watchlists:add_ticker' h_id=W.id %}">
+                {% csrf_token %}
+                <div class='formgroup row'>
+                  <label class='col-md-4 text-right' for='ticker'>Ticker:</label>
+                  <input class='col-md-4' id='ticker'
+                          type='text' placeholder='aapl' name='ticker'
+                          {% if error %} value="{{modalticker.ticker}}"{% endif %}
+                          />
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-9 offset-md-2'>
+      <h6 style='display: inline;'>Securities:</h6> {{tickers}}
+    </div>
+  </div>
+</div>
+<div class='container-fluid'>
+  <hr>
+  {% endif %}
+  {% if edit %}
+  <table class='table table-bordered table-condensed'>
+    <th class='col text-center' id='columns'>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        Add Column
+      </button>
+      <div class="modal fade bg-dark" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Add Column</h4>
+            </div>
+            <div class="modal-body">
+              <form method='POST' action="{% url 'watchlists:add_column' h_id=W.id %}">
+                {% csrf_token %}
+                <div class='formgroup row'>
+                  <label class='col-md-2 text-right' for='element'>Element:</label>
+                  <!-- <input class='col-md-2'
+                          type='text' placeholder='totalrevenue' name='element'
+                          { % if error %} value="{ {modaldata.element}}"{ % endif %}
+                          /> -->
+                  <select name='element' class='col-md-2'>
+                    {% for e in T %}
+                    <option value="{{e.tag}}">{{e.name}}</option>
+                    {% endfor %}
+                  </select>
+                  <label class='col-md-2 text-right' for='period'>Period:</label>
+                  <select name="period" class='col-md-4'>
+                    {% for choice, value in PERIODS %}
+                    <option value="{{choice}}">{{value}}</option>
+                    {% endfor %}
+                  </select>
+                  <!-- {{PERIODS}} -->
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </th>
+    <th class='col text-center'>
+      Ticker
+    </th>
+    <th class='col text-center'>
+      Name
+    </th>
+    {% for e in cols %}
+    <th class='col text-center'>{{e.heading}}</th>
+    {% endfor %}
+  </table>
+</div>
+<!-- { {cols}} -->
+{% endif %}
+{% endblock %}

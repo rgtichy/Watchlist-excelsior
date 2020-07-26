@@ -1,0 +1,50 @@
+{% extends "userprofiles/wrap.html" %}
+
+{% block title %}Login and Registration{% endblock %}
+
+{% block main %}
+<h1>Login / Register</h1>
+  <div id='login'>
+    <p>{% if new %}Registration is complete. Please Login in!{% endif %}</p>
+    <form method='POST' action='/userprofiles/login'>
+      {% csrf_token %}
+      <input type='text' placeholder='e-mail' name='user'
+        {% if new %}
+        value="{{formdata.email}}"
+        {% endif %}
+        />
+      <input type='password' placeholder='Password' name='password' />
+      <button type='submit'>Login</button>
+    </form>
+  </div>
+  <div id='register'>
+    <form method='POST' action='/userprofiles/register'>
+      {% csrf_token %}
+      <input type='text' placeholder='First Name' name='first_name'
+        {% if error %}
+        value="{{formdata.first_name}}"
+        {% endif %}
+        />
+      <input type='text' placeholder='Last Name' name='last_name'
+        {% if error %}
+        value="{{formdata.last_name}}"
+        {% endif %}
+        />
+      <input type='text' placeholder='e-mail' name='email'
+        {% if error %}
+        value="{{formdata.email}}"
+        {% endif %}
+        />
+      <input type='password' placeholder='Password' name='password' />
+      <input type='password' placeholder='Confirm Password' name='password2' />
+      <button type='submit'>Create</button>
+    </form>
+  </div>
+  <div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+    {% if error == True %}
+    {% for each in errors %}
+    <p class='error'>{{each}}</p>
+    {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}

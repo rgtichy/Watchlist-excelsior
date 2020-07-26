@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="utf-8">
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="description" content="Watchlists">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- The line above tells Django to be ready to listen for static files -->
+    <!-- <link rel="stylesheet" href="{% static 'ourApp/css/main.css' %}"> -->
+    <!-- Put the static files in the static folder inside your app.
+       Django collects files within all static folders and puts them within a single folder -->
+    <title>{{title}}</title>
+    </head>
+    <body>
+      <div class='container'>
+        <div class='row'>
+          <div class='col-md-8'>
+            <h1>{{title}}</h1>
+          </div>
+          <div class='col-md-1'>
+            <a class='btn btn-primary' href="{% url 'userprofiles:success' %}">Dashboard</a>
+          </div>
+          <div class='col-md-1'>
+            <a class='btn btn-primary' href="{% url 'userprofiles:logout' %}">Profile</a>
+          </div>
+          <div class='col-md-1'>
+            <a class='btn btn-primary' href="{% url 'userprofiles:logout' %}">Logout</a>
+          </div>
+        </div>
+        <div>
+          <h2 style='display:inline'>
+            Watchlist: {{W.name}}
+          </h2>
+          <form method='POST' action=
+              {% if edit %}
+                "{% url 'watchlists:update' id=W.id %}"
+              {% else %}
+                "{% url 'watchlists:create' %}"
+              {% endif %}
+          >
+            {% csrf_token %}
+            <div class='formgroup row'>
+              <label class='col-md-2 text-right' for='tag'>Watchlist</label>
+              <input class='col-md-3 text-left'
+                     type='text' placeholder='My Watchlist' name='name'
+                     {% if edit %} value="{{W.name}}"{% endif %}
+                     {% if error %} value="{{formdata.name}}"{% endif %}
+                     />
+            </div>
+            <div class='formgroup row'>
+              <label class='col-md-2 text-right' for="description">Description</label>
+              <input class='col-md-9 text-left' name='description'
+                     {% if edit %} value="{{W.description}}"{% endif %}
+                     {% if error %} value="{{formdata.description}}"{% endif %}
+                     />
+            </div>
+            <div class='formgroup row'>
+              <label class='col-md-2 text-right' for='wval_1'>Value 1:</label>
+              <input class='col-md-1 text-right'
+                     type='number' placeholder='100' name='wval_1' step="0.01"
+                     {% if edit %} value="{{W.wval_1}}"{% endif %}
+                     {% if error %} value="{{formdata.wval_1}}"{% endif %}
+                     />
+              <label class='col-md-1 text-right' for='wval_2'>2:</label>
+              <input class='col-md-1 text-right'
+                      type='number' placeholder='100' name='wval_2' step="0.01"
+                      {% if edit %} value="{{W.wval_2}}"{% endif %}
+                      {% if error %} value="{{formdata.wval_2}}"{% endif %}
+                      />
+              <label class='col-md-1 text-right' for='wval_3'>3:</label>
+              <input class='col-md-1 text-right'
+                      type='number' placeholder='100' name='wval_3' step="0.01"
+                      {% if edit %} value="{{W.wval_3}}"{% endif %}
+                      {% if error %} value="{{formdata.wval_3}}"{% endif %}
+                      />
+              <label class='col-md-1 text-right' for='wval_4'>4:</label>
+              <input class='col-md-1 text-right'
+                      type='number' placeholder='100' name='wval_4' step="0.01"
+                      {% if edit %} value="{{W.wval_4}}"{% endif %}
+                      {% if error %} value="{{formdata.wval_4}}"{% endif %}
+                      />
+              <label class='col-md-1 text-right' for='wval_5'>5:</label>
+              <input class='col-md-1 text-right'
+                      type='number' placeholder='100' name='wval_5' step="0.01"
+                      {% if edit %} value="{{W.wval_5}}"{% endif %}
+                      {% if error %} value="{{formdata.wval_5}}"{% endif %}
+                      />
+            </div>
+            <div class='row'>
+              <div class='formgroup'>
+                <label class='col-md-2 text-right' for='wpct_1'>Pctg. 1:</label>
+                <input class='col-md-1 text-right'
+                       type='number' placeholder='100' name='wpct_1' step="0.01"
+                       {% if edit %} value="{{W.wpct_1}}"{% endif %}
+                       {% if error %} value="{{formdata.wpct_1}}"{% endif %}
+                       />
+              </div>
+              <div class='formgroup'>
+                <label class='col-md-1 text-right' for='wpct_2'>2:</label>
+                <input class='col-md-1 text-right'
+                        type='number' placeholder='100' name='wpct_2' step="0.01"
+                        {% if edit %} value="{{W.wpct_2}}"{% endif %}
+                        {% if error %} value="{{formdata.wpct_2}}"{% endif %}
+                        />
+              </div>
+              <div class='formgroup'>
+                <label class='col-md-1 text-right' for='wpct_3'>3:</label>
+                <input class='col-md-1 text-right'
+                        type='number' placeholder='100' name='wpct_3' step="0.01"
+                        {% if edit %} value="{{W.wpct_3}}"{% endif %}
+                        {% if error %} value="{{formdata.wpct_3}}"{% endif %}
+                        />
+              </div>
+              <div class='formgroup'>
+                <label class='col-md-1 text-right' for='wpct_4'>4:</label>
+                <input class='col-md-1 text-right'
+                        type='number' placeholder='100' name='wpct_4' step="0.01"
+                        {% if edit %} value="{{W.wpct_4}}"{% endif %}
+                        {% if error %} value="{{formdata.wpct_4}}"{% endif %}
+                        />
+              </div>
+              <div class='formgroup'>
+                <label class='col-md-1 text-right' for='wpct_5'>5:</label>
+                <input class='col-md-1 text-right'
+                        type='number' placeholder='100' name='wpct_5' step="0.01"
+                        {% if edit %} value="{{W.wpct_5}}"{% endif %}
+                        {% if error %} value="{{formdata.wpct_5}}"{% endif %}
+                        />
+              </div>
+            </div>
+            <div class='row'>
+              <div class='col-md-8'>
+              </div>
+              <div class='col-md-1'>
+                <button class='btn btn-primary' type='submit' name='submit'>
+                  {% if edit %} Update
+                  {% else %} Add
+                  {% endif %}
+                </button>
+              </div>
+              <div class='col-md-1'>
+                {% if edit %}
+                  <!-- <a class='btn btn-danger' href="{  % url 'watchlists:delete' id=D.id %}" type='button' name='delete'>Delete</a> -->
+                {% endif %}
+              </div>
+            </div>
+          </form>
+          <div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+            {% if error == True %}
+              {% for each in errors %}
+              <div class='row danger'>
+                <p class='error'>{{each}}</p>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <table class='table table-bordered table-condensed'>
+            <th class='col-md-1 text-center'>
+              Order
+            </th>
+            <th class='col-md-2'>
+              Name
+            </th>
+            <th class='col-md-3' id='columns' style="display: {% if edit %}inline-block{% else %}none{% endif %};">
+              <a class='btn btn-primary' href="{% url 'watchlists:add_column' h_id=W.id %}">+</a>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                Launch demo modal
+              </button>
+            </th>
+          </table>
+        </div>
+      </div>
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>

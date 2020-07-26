@@ -1,0 +1,23 @@
+{% extends "securities/wrap.html" %}
+
+{% block title %}Securities{% endblock %}
+
+{% block main %}
+<h1>Data Tag Entry</h1>
+  <div id='securities'>
+    <div class='row'>
+      <div class='col-md-9'>
+        <h2>{{ D.name }}</h2>
+      </div>
+      <div class='col-md-1'>
+        <a class='btn btn-primary' href="{% url 'securities:index' %}">Back</a>
+      </div>
+    </div>
+  <div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+    {% if error == True %}
+    {% for each in errors %}
+    <p class='error'>{{each}}</p>
+    {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}

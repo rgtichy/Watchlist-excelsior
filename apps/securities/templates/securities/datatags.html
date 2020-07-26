@@ -1,0 +1,59 @@
+{% extends "securities/wrap.html" %}
+
+{% block title %}Data Tags{% endblock %}
+
+{% block main %}
+<hr>
+  <div id='datatags'>
+    <div class='row'>
+      <div class='col-md-9'>
+        <h2>Data Tags ({{count}})</h2>
+          <a class='btn btn-primary' href="{% url 'securities:datatag_add' %}">Add New</a>
+          <a class='btn btn-primary' href="{% url 'securities:data_tag_load' %}">Load</a>
+      </div>
+      <div class='col-md-1'>
+        <a class='btn btn-primary' href="{% url 'securities:index' %}">Securities</a>
+      </div>
+      <div class='col-md-1'>
+        <a class='btn btn-primary' href="{% url 'securities:companies' %}">Companies</a>
+      </div>
+    </div>
+    <div>
+      <table class="table table-hover sortable">
+        <thead>
+          <tr>
+              <th class='col-md-2'>Actions</th>
+              <!-- <th class='col-md-1'>Edit</th> -->
+              <th class='col-md-2'>Data Tag</th>
+              <th class='col-md-3'>Name</th>
+              <th>Statement</th>
+              <th>Component of</th>
+              <th>Units</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for each in D %}
+          <tr>
+            <td>
+              <a class='btn btn-primary btn-xs'>Show</a>
+              <a class='btn btn-primary btn-xs' href="{%url 'securities:datatag_edit' id=each.id %}">Edit</a>
+            </td>
+            <td>{{each.tag}}</td>
+            <td>{{each.name}}</td>
+            <td>{{each.statement_code}}</td>
+            <td>{{each.parent}}</td>
+            <td>{{each.units}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id='errors' {% if error == True %}style='display: inline-block;'{% else %}style='display: none;'{% endif %}>
+    {% if error == True %}
+    {% for each in errors %}
+    <p class='error'>{{each}}</p>
+    {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}

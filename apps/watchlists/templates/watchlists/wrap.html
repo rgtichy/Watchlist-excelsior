@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      {% load static %}
+      <meta charset="utf-8">
+      <meta name="description" content="Watchlists">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <!-- Optional theme -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+      <!-- The line above tells Django to be ready to listen for static files -->
+      <!-- <link rel="stylesheet" href="{% static 'ourApp/css/main.css' %}"> -->
+      <!-- Put the static files in the static folder inside your app.
+           Django collects files within all static folders and puts them within a single folder -->
+      <title>{% block title %}Default{% endblock %}</title>
+    </head>
+    <body>
+      <div class='container'>
+        <div class='row'>
+          <div class='col-md-8'>
+            <h1>{{title}}</h1>
+          </div>
+          <div class='col-md-1'>
+            <a class='btn btn-primary' href="{% url 'userprofiles:success' %}">Dashboard</a>
+          </div>
+          <div class='col-md-1'>
+            <a class='btn btn-primary' href="{% url 'userprofiles:logout' %}">Profile</a>
+          </div>
+          <div class='col-md-1'>
+            <a class='btn btn-primary' href="{% url 'userprofiles:logout' %}">Logout</a>
+          </div>
+        </div>
+    </div>
+    {% block main %}
+      <h1>Watchlists error</h1>
+    {% endblock %}
+    </body>
+  </html>
