@@ -103,46 +103,50 @@
   <hr>
   {% endif %}
   {% if edit %}
+  <div class="modal fade bg-dark" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add Column</h4>
+        </div>
+        <div class="modal-body">
+          <form method='POST' action="{% url 'watchlists:add_column' h_id=W.id %}">
+            {% csrf_token %}
+            <div class='formgroup row'>
+              <label class='col-md-2 text-right' for='element'>Element:</label>
+              <!-- <input class='col-md-2'
+                      type='text' placeholder='totalrevenue' name='element'
+                      { % if error %} value="{ {modaldata.element}}"{ % endif %}
+                      /> -->
+              <select name='element' class='col-md-2'>
+                {% for e in T %}
+                <option value="{{e.tag}}">{{e.name}}</option>
+                {% endfor %}
+              </select>
+              <label class='col-md-2 text-right' for='period'>Period:</label>
+              <select name="period" class='col-md-4'>
+                {% for choice, value in PERIODS %}
+                <option value="{{choice}}">{{value}}</option>
+                {% endfor %}
+              </select>
+              <!-- {{PERIODS}} -->
+            </div>
+            <div class='formgroup row'>
+              <label class='col-md-2 text-right' for='heading'>Heading:</label>
+              <input class='col-md-6' type='text' id='heading' name='heading' placeholder="Type a Descriptive Heading"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <table class='table table-bordered table-condensed'>
     <th class='col text-center' id='columns'>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
         Add Column
       </button>
-      <div class="modal fade bg-dark" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Add Column</h4>
-            </div>
-            <div class="modal-body">
-              <form method='POST' action="{% url 'watchlists:add_column' h_id=W.id %}">
-                {% csrf_token %}
-                <div class='formgroup row'>
-                  <label class='col-md-2 text-right' for='element'>Element:</label>
-                  <!-- <input class='col-md-2'
-                          type='text' placeholder='totalrevenue' name='element'
-                          { % if error %} value="{ {modaldata.element}}"{ % endif %}
-                          /> -->
-                  <select name='element' class='col-md-2'>
-                    {% for e in T %}
-                    <option value="{{e.tag}}">{{e.name}}</option>
-                    {% endfor %}
-                  </select>
-                  <label class='col-md-2 text-right' for='period'>Period:</label>
-                  <select name="period" class='col-md-4'>
-                    {% for choice, value in PERIODS %}
-                    <option value="{{choice}}">{{value}}</option>
-                    {% endfor %}
-                  </select>
-                  <!-- {{PERIODS}} -->
-                </div>
-                <button type="submit" class="btn btn-primary">Add</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </th>
     <th class='col text-center'>
       Ticker

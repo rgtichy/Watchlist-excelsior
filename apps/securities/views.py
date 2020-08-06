@@ -102,7 +102,7 @@ def datatag_add(request):
 
     return render(request, 'securities/datatag_entry.html', context)
 
-# This is the Create page for Data Tags
+# This is the Create for Data Tags
 def data_tag(request):
     # print(":"*50)
     # pprint(request.POST)
@@ -119,7 +119,7 @@ def data_tag(request):
         request.session.data = obj
     return redirect('securities:datatags')
 
-# This is the Update page for Data Tags
+# This is the Update for Data Tags
 def data_tag_edit(request, id):
 
     id = int(id)
@@ -281,14 +281,15 @@ def data_tag_load(request):
                        # 'economic',
                        'current'
                       ]
-    first = True
+    # first = True
     i = 0
 
     for each in STATEMENT_CODES:
         try:
             next_page = ""
             each_flag = True
-            while first or each_flag or next_page != None:
+            # while first or each_flag or next_page != None:
+            while each_flag or next_page != None:
 
                 api_response = intrinio_sdk.DataTagApi().get_all_data_tags(
                     tag="",
@@ -304,12 +305,43 @@ def data_tag_load(request):
                     # pprint(e)
                     # print("-"*40)
                     if each_flag:
+                        # print(e)
                         each_flag = False
-                    if first:
-                        first = False
-                        toDelete = Data_Tag.objects.all()
-                        toDelete.delete()
-                    (flag, errors) = Data_Tag.objects.load_Data_Tag(e)
+                    # if first:
+                    #     first = False
+                    #     toDelete = Data_Tag.objects.all()
+                    #     toDelete.delete()
+                    # (flag, errors) = Data_Tag.objects.load_Data_Tag(e)
+                    u = Data_Tag.objects.filter(intrinio_id=e['id']).first()
+                    flag = False
+                    errors = []
+
+                    for k in e.keys():
+                        if e[k] == None:
+                            e[k] = ""
+                    if e['sequence'] == "":
+                        e['sequence'] = 0
+
+                    if u:
+                        u.tag = e['tag']
+                        u.name = e['name']
+                        u.statement_code = e['statement_code']
+                        u.template = e['statement_type']
+                        u.parent = e['parent']
+                        u.sequence = e['sequence']
+                        u.factor = e['factor']
+                        u.balance = e['balance']
+                        u.nature = e['type']
+                        u.units = e['unit']
+
+                        try:
+                            # pprint(u)
+                            u.save()
+                        except:
+                            flag = True
+                            errors += [f'Data Tag {e["tag"]} not updated successfully. Tag: {e}']
+                    else:
+                        (flag, errors) = Data_Tag.objects.load_Data_Tag(e)
                     if flag:
                         print(e, errors)
                     i += 1

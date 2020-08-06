@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from ..userprofiles.models import User, ValidateLogin
 from . import models
-from ..securities.models import PERIOD_CHOICES, Security, Data_Tag
+from ..securities.models import PERIOD_CHOICES, Security, Data_Tag, Historical_Retrieval_Log
 from decimal import *
 # Create your views here.
+
+Retrieve_Datapoint = Historical_Retrieval_Log.objects.Datapoint_Retrieval
 
 def validatelogin(R):
     if 'login' in R and 'user_id' in R and 'key' in R:
@@ -83,7 +85,7 @@ def edit(request, id):
                'tickers': ", ".join([e.ticker for e in d]),
                'PERIODS' : PERIOD_CHOICES,
                'T': [{'tag':'*' + e.tag, 'name':f'{e.name}, ({e.units})', 'desc':e.description, 'level':e.level,} for e in t],
-               'cols': [{'left':'url', 'right':'url', 'heading':f"{e.tag}\n{e.period}"} for e in c],
+               'cols': [{'left':'url', 'right':'url', 'heading':e.heading, 'tooltip':e.tooltip, 'destroy':'url'} for e in c],
                }
     # print(context)
     if 'error' in request.session and request.session['error'] == True:
@@ -208,29 +210,40 @@ def add_col(request, h_id):
     print(request.POST)
 
     formdata = {'element': request.POST['element'],
-                'period': request.POST['period']
+                'period': request.POST['period'],
+                'heading': request.POST['heading']
                 }
+    formdata['heading'] = str(formdata['heading']).strip()
 
     if (formdata['element'])[0] == '*':
         periods = [e[0] for e in PERIOD_CHOICES]
         # it is a 'Tag,' not a 'Formula'
-        t = Data_Tag.objects.filter(tag=(formdata['element'])[1:])
+        t = Data_Tag.objects.filter(tag=(formdata['element'])[1:]).first()
         if not t:
-            request.session['error'] = true
+            request.session['error'] = True
             request.session['errors'] += ['Data Tag invalid.  Column not added.']
             request.session['formdata'] = formdata
         else:
             if formdata['period'] not in periods:
-                request.session['error'] = true
+                request.session['error'] = True
                 request.session['errors'] += ['Period invalid.  Column not added.']
                 request.session['formdata'] = formdata
-            else:
-                last = models.Watchlist_Cols.objects.last()
-                seq = 1
-                if last:
-                    seq = last.seq + 1
-                new = models.Watchlist_Cols(seq=seq, tag=(formdata['element'])[1:], period=formdata['period'], watchlist=wh)
-                new.save()
+            if formdata['heading'] == "":
+                formdata['heading'] = t.name
+        if request.session['error'] == False:
+            last = models.Watchlist_Cols.objects.last()
+            seq = 1
+            if last:
+                seq = last.seq + 1
+            i = periods.index(formdata['period'])
+            tooltip = t.name + ";" + PERIOD_CHOICES[i][1]
+            new = models.Watchlist_Cols(seq=seq,
+                                        tag=(formdata['element'])[1:],
+                                        period=formdata['period'],
+                                        heading=formdata['heading'],
+                                        tooltip=tooltip,
+                                        watchlist=wh)
+            new.save()
 
     return redirect( 'watchlists:edit', id=wh.id)
 
@@ -315,11 +328,29 @@ def view(request, id):
         asterisk = lambda T: T[1:] if T[0]=='*' else T
         if e.tag != "":
             t = asterisk(e.tag) #drop the asterisk off the front and add the tag into the list of items
-            items += (t,e.period)
+            items = [(t,e.period)] + items
         else:
+            # calculated columns (custom columns)
             pass
-    context = {'tickers':tickers,
-               'cols': cols,
-               'items':items,
+
+    context = {'tickers' : tickers,
+               'cols' : [{'tag': e.tag,
+                          'period': e.period,
+                          'heading': e.heading,
+                          'tooltip': e.tooltip,  } for e in cols],
+               'items' : items,
+               'ticker_tags' : [],
                 }
+
+    for e in tickers:
+        d = {'ticker':e.ticker}
+        for tag_period in items:
+            t = tag_period[0]
+            p = tag_period[1]
+            k = t + "_" + p
+            d[ k ] = Retrieve_Datapoint( {'ticker' : e.ticker, 'tag' : t, 'period' : p} )
+
+
+        context['ticker_tags'] += [d]
+
     return render(request, 'watchlists/view.html', context)

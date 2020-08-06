@@ -4,4 +4,20 @@
 {{cols}}
 {{tickers}}
 {{items}}
+<hr>
+{% for each in ticker_tags %}
+  <p>{{each}}</p>
+{% endfor %}
+<hr>
+<table class='table'>
+  <thead>
+    {% for each in cols %}
+    <td>
+      
+    </td>
+    {% endfor %}
+  </thead>
+  <tbody>
+  </tbody>
+</table>
 {% endblock %}

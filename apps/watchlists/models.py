@@ -49,6 +49,8 @@ class Watchlist_Cols(models.Model):
     seq = models.FloatField(default=0)
     tag = models.CharField(max_length=25, default="") # The Intrinio Data Tag
     period = models.CharField(max_length=4)
+    heading = models.CharField(max_length=255)
+    tooltip = models.CharField(max_length=255)
     # formula_name = models.CharField(max_length=50) # Specific data_tag/calculation fields, possibly as simple as a tag
     # test = models.TextField() # A conditional that might be applied to the formula result as a test for filtering or ???
     created_at = models.DateTimeField(auto_now_add = True)

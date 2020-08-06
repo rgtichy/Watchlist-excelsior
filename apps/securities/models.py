@@ -1,4 +1,5 @@
 from django.db import models
+from decimal import *
 
 # Create your models here.
 
@@ -278,8 +279,17 @@ class Data_Tag(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
     objects = Data_TagManager()
 
-class Historical_Retrieval_Log(models.Model):
+class Datapoint_Manager(models.Manager):
+    def companyDatapoint(ticker, tag, period):
+        n = 7
+        return Decimal(n)
+    def Datapoint_Retrieval(self, data):
+        t = Data_Tag.objects.filter(tag=data['tag']).first()
+        if t and t.api == "A":
+            return Datapoint_Manager.companyDatapoint(data['ticker'], data['tag'], data['period'])
+        return Decimal(6)
 
+class Historical_Retrieval_Log(models.Model):
     ticker = models.CharField(max_length=255, db_index=True)
     data_tag = models.CharField(max_length=25, db_index=True)
     period = models.CharField(max_length=3)
@@ -296,3 +306,4 @@ class Historical_Retrieval_Log(models.Model):
     divisor = models.PositiveSmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    objects = Datapoint_Manager()
