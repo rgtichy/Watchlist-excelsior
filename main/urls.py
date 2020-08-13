@@ -21,5 +21,5 @@ urlpatterns = [
     re_path(r'^userprofiles/', include('apps.userprofiles.urls', namespace='userprofiles')),
     re_path(r'^securities/', include('apps.securities.urls', namespace='securities')),
     re_path(r'^watchlists/', include('apps.watchlists.urls', namespace='watchlists')),
-
+    re_path(r'^$', include('apps.userprofiles.urls', namespace='userprofiles')),
 ]

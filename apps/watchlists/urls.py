@@ -30,5 +30,5 @@ urlpatterns = [
     re_path(r'^head/(?P<h_id>\d+)/add$',      views.add_col,       name = 'add_column'),
     re_path(r'^head/(?P<h_id>\d+)/addticker$',views.add_ticker,    name = 'add_ticker'),
     re_path(r'^view/(?P<id>\d+)'             ,views.view,          name = 'view'),
-
+    re_path(r'^play$',                         views.playground,    name = 'playground'),               
 ]

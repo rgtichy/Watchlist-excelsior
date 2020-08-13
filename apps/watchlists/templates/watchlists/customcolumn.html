@@ -1,0 +1,62 @@
+{% extends "watchlists/wrap.html" %}
+
+{% block main %}
+
+<div class="form-group">
+    <input type="text" id="txt-3" class="form-control">
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary btn-validate-3">Validate</button>
+    <button class="btn btn-primary btn-get-exp-3">Get expression</button>
+    <button class="btn btn-primary btn-get-run-3">Run expression</button>
+  </div>
+  <script id="variable-script">
+    function showMessage(str) {
+    alert(str);
+  }
+
+    let options3 = {
+      variables: [
+        {
+          variableId: 1,
+          name: 'FirstName'
+        },
+        {
+          variableId: 2,
+          name: 'Age',
+          value: "!Age"
+        }
+      ],
+      expression: "Add(Age, 4)",
+      functions: {
+        Add: function (x, y) {
+
+          if (x == undefined || isNaN(parseFloat(x)))
+            throw new Error("Parameter 'x' is not defined or is not a number.");
+
+          return x + y;
+        },
+        Sub: function (x, y) {
+          return x - y;
+        }
+      }
+    };
+
+    var expBuilder3 = $('#txt-3').expressionBuilder(options3);
+
+    $('.btn-validate-3').on('click', function () {
+      if (expBuilder3.isValid())
+        showMessage('Valid');
+      else
+        showMessage('Not valid');
+    });
+
+    $('.btn-get-exp-3').on('click', function () {
+      showMessage(expBuilder3.getExpression());
+    });
+
+    $('.btn-get-run-3').on('click', function () {
+      showMessage("As input:" + expBuilder3.getInput() + "\n" + expBuilder3.getInput() + " = " + expBuilder3.runExpression());
+    });
+  </script>
+{% endblock %}

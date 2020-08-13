@@ -354,3 +354,7 @@ def view(request, id):
         context['ticker_tags'] += [d]
 
     return render(request, 'watchlists/view.html', context)
+
+def playground(request):
+    context = {}
+    return render(request, 'watchlists/customcolumn.html', context)
